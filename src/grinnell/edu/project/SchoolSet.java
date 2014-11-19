@@ -9,19 +9,16 @@ public class SchoolSet
   School[] schools;
   //holds the possible dates of play
   int[] season;
-  //holds the second school, the location of the game
-  School home;
 
   //+--------------+---------------------------------------------------
   //| Constructors |
   //+--------------+
 
-  public Game(int date, School school1, School school2)
+  public SchoolSet(School[] schools, int[] season)
   {
-    this.date = date;
-    this.away = school1;
-    this.home = school2;
-  }//Game()
+    this.schools = schools ;
+    this.season = season ;
+  }//SchoolSet()
 
   //+---------+-----------------------------------------------------
   //| Methods |

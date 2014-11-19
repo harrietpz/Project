@@ -27,6 +27,11 @@ public class School
     this.name = name;
     this.abrev = abrev;
     this.gameCount = 0;
+  }//School(int[], int[], String, String)
+  
+  public School()
+  {
+    this.gameCount = 0;
   }//School()
 
   //+---------+-----------------------------------------------------
