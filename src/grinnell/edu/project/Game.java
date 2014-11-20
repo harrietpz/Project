@@ -1,12 +1,15 @@
 package grinnell.edu.project;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 public class Game
 {
   //+--------+----------------------------------------------------------
   //| Fields |
   //+--------+
   //holds the date of a game
-  int date;
+  LocalDate date;
   //holds the first school
   School away;
   //holds the second school, the location of the game
@@ -16,7 +19,7 @@ public class Game
   //| Constructors |
   //+--------------+
   
-  public Game(int date, School school1, School school2)
+  public Game(LocalDate date, School school1, School school2)
   {
     this.date = date;
     this.away = school1;

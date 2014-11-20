@@ -1,14 +1,16 @@
 package grinnell.edu.project;
 
+import java.time.LocalDate;
+
 public class School
 {
   //+--------+----------------------------------------------------------
   //| Fields |
   //+--------+
   //holds necessary dates of play
-  int[] yesDates;
+  LocalDate[] yesDates;
   //holds restrictions of play
-  int[] noDates;
+  LocalDate[] noDates;
   //holds counter of scheduled games
   int gameCount;
   //holds the name of the school
@@ -20,7 +22,7 @@ public class School
   //| Constructors |
   //+--------------+
 
-  public School(int[] dates, int[] dates2, String name, String abrev)
+  public School(LocalDate[] dates, LocalDate[] dates2, String name, String abrev)
   {
     this.yesDates = dates;
     this.noDates = dates2;
@@ -38,13 +40,13 @@ public class School
   //| Methods |
   //+---------+
 
-  public boolean canPlay(int date)
+  public boolean canPlay(LocalDate date)
   {
     //STUB
     return true;
   }//canPlay(int)
 
-  public boolean mustPlay(int date)
+  public boolean mustPlay(LocalDate date)
   {
     //STUB
     return true;

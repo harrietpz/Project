@@ -2,12 +2,12 @@ package grinnell.edu.project;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -18,33 +18,32 @@ import java.util.ListIterator;
 public class Utils
 {
   /**
-   * Method to convert a string to an array of ints
+   * Method to convert a string to an array of LocalDates
    */
-  public static int[] arrayParser(String input)
+  public static LocalDate[] StringToDate(String[] input)
   {
-    int count=((input.length()-6) / 8) + 1;
-    int[] vals = new int[count];
-    int index=0;
-    for(int i=0; i<count; i++)
+    int count = input.length;
+
+    LocalDate[] vals = new LocalDate[count];
+
+    for (int i = 0; i < count; i++)
       {
-        //set vals to be the substring of length 6
-        vals[i]=Integer.valueOf(input.substring(index, index+6));
-        //increment index by 8
-        index+=8; 
-      }//for loop
+        CharSequence tmp = input[i].subSequence(0, input[i].length()) ;
+        vals[i] = LocalDate.parse(tmp);
+        System.out.println(vals[i].toString());
+      }//for
+
     return vals;
-  }//arrayParser(String)
+  }//StringToDate(String)
+
   /**
    * Method that reads the file that we entered and returns a string linked list
    * @throws IOException
    */
-  public static List<String> readFile()
+  public static List<String> readFile(PrintWriter pen,
+                                      BufferedReader inputReader)
     throws IOException
   {
-    PrintWriter pen = new PrintWriter(System.out, true);
-    BufferedReader inputReader =
-        new BufferedReader(new InputStreamReader(System.in));
-
     pen.println("Enter filename please: ");
     String userResponse = inputReader.readLine();
     pen.flush();
@@ -69,8 +68,8 @@ public class Utils
       return null;
 
     int numberOfSchools = Integer.valueOf(cursor.next());
-    int[] season = arrayParser(cursor.next());
-        
+    LocalDate[] season = StringToDate((cursor.next()).split(", "));
+
     School[] schoolArray = new School[numberOfSchools];
     int i = 0;
     while (cursor.hasNext() && i < numberOfSchools)
@@ -78,14 +77,14 @@ public class Utils
         School tmp = new School();
         tmp.name = cursor.next();
         tmp.abrev = cursor.next();
-        tmp.yesDates = arrayParser(cursor.next());
-        tmp.noDates = arrayParser(cursor.next());
+        tmp.yesDates = StringToDate((cursor.next()).split(", "));
+        tmp.noDates = StringToDate((cursor.next()).split(", "));
         cursor.next();
         i++;
       }//while
 
     SchoolSet answer = new SchoolSet(schoolArray, season);
-    
+
     return answer;
   }
 }//class Utils
