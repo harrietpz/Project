@@ -1,21 +1,40 @@
 package grinnell.edu.project;
 
 import java.time.LocalDate;
+/**
+ * A class containing information about a school
+ * 
+ * @author Ajuna Kyaruzi
+ * @author Leah Greenberg
+ * @author Eileen Fordham
+ * @author Hattie Zucker
+ *
+ */
 
 public class School
 {
   //+--------+----------------------------------------------------------
   //| Fields |
   //+--------+
-  //holds necessary dates of play
+  /**
+   * holds necessary dates of play
+   */
   LocalDate[] yesDates;
-  //holds restrictions of play
+  /**
+   * holds restrictions of play
+   */
   LocalDate[] noDates;
-  //holds counter of scheduled games
+  /**
+   * holds counter of scheduled games
+   */
   int gameCount;
-  //holds the name of the school
+  /**
+   * holds the name of the school
+   */
   String name;
-  //Holds the abbreviation for the school name
+  /**
+   * Holds the abbreviation for the school name
+   */
   String abrev;
 
   //+--------------+---------------------------------------------------
@@ -39,19 +58,30 @@ public class School
   //+---------+-----------------------------------------------------
   //| Methods |
   //+---------+
-
+/**
+ * Checks if a school is able to play on a given date
+ * @param date, a Local Date
+ * @return a boolean
+ */
   public boolean canPlay(LocalDate date)
   {
     //STUB
     return true;
   }//canPlay(int)
-
+  /**
+   * Checks if a school must play on a given date
+   * @param date, a Local Date
+   * @return a boolean
+   */
   public boolean mustPlay(LocalDate date)
   {
     //STUB
     return true;
   }//mustPlay(int)
-  
+  /**
+   * Checks if a school has played all the games it has to play
+   * @return a boolean
+   */
   public boolean maxGames()
   {
     return this.gameCount==16;

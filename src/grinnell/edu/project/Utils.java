@@ -11,40 +11,29 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ListIterator;
 
-//@Citation We used code that Ajuna and Albert wrote for HW 7
-//@Citation http://stackoverflow.com/questions/4716503/best-way-to-read-a-text-file
-//@Citation https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html#read--
-
+/**
+ * Methods for reading files to make schedules and printing them
+ * 
+ * @author Ajuna Kyaruzi
+ * @author Leah Greenberg
+ * @author Eileen Fordham
+ * @author Hattie Zucker
+ * @Citation We used code that Ajuna and Albert wrote for HW 7
+ * @Citation http://stackoverflow.com/questions/4716503/best-way-to-read-a-text-file
+ * @Citation https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html#read--
+*/
 public class Utils
 {
   /**
-   * Method to convert a string to an array of LocalDates
-   */
-  public static LocalDate[] StringToDate(String[] input)
-  {
-    int count = input.length;
-
-    LocalDate[] vals = new LocalDate[count];
-
-    for (int i = 0; i < count; i++)
-      {
-        CharSequence tmp = input[i].subSequence(0, input[i].length()) ;
-        vals[i] = LocalDate.parse(tmp);
-        System.out.println(vals[i].toString());
-      }//for
-
-    return vals;
-  }//StringToDate(String)
-
-  /**
    * Method that reads the file that we entered and returns a string linked list
    * @throws IOException
+   * @param pen, a PrintWriter
+   * @param inputReader, a BufferedReader
    */
   public static List<String> readFile(PrintWriter pen,
                                       BufferedReader inputReader)
     throws IOException
   {
-    pen.println("Enter filename please: ");
     String userResponse = inputReader.readLine();
     pen.flush();
     Path path = FileSystems.getDefault().getPath(userResponse);
@@ -61,6 +50,11 @@ public class Utils
     return answer;
   }// readFile()
 
+  /**
+   * Method that turns input into a SchoolSet
+   * @param input, a linked list
+   * @return a SchoolSet
+   */
   public static SchoolSet schoolReader(List<String> input)
   {
     ListIterator<String> cursor = input.listIterator();
@@ -86,5 +80,91 @@ public class Utils
     SchoolSet answer = new SchoolSet(schoolArray, season);
 
     return answer;
-  }
+  }//schoolReader(List<String>)
+
+  /**
+   * Turn input into an array of distances
+   * @param input, a linked list
+   * @return an array of Distances
+   */
+  public static Distance[] distanceReader(List<String> input)
+  {
+    ListIterator<String> cursor = input.listIterator();
+    int size = input.size();
+    if (size == 0)
+      return null;
+    Distance[] vals = new Distance[size];
+    for (int i = 0; i < size; i++)
+      {
+        String[] tmp = cursor.next().split(" ");
+        vals[i] = new Distance(tmp[0], tmp[1], Integer.valueOf(tmp[2]));
+      }//for loop
+
+    return vals;
+
+  }//distanceReader(List<String>)
+
+  /**
+   * Method to convert a string to an array of LocalDates
+   * @param input, a String[]
+   * @return a LocalDate[]
+   */
+  public static LocalDate[] StringToDate(String[] input)
+  {
+    int count = input.length;
+
+    LocalDate[] vals = new LocalDate[count];
+    for (int i = 0; i < count; i++)
+      {
+        CharSequence tmp = input[i].subSequence(0, input[i].length());
+        vals[i] = LocalDate.parse(tmp);
+      }//for
+
+    return vals;
+  }//StringToDate(String)
+
+  /**
+   * Print out our entire schedule of games and dates
+   * @param pen
+   * @param games
+   */
+  public static void schedPrint(PrintWriter pen, Game[] games)
+  {
+    pen.println("Schedule of Games");
+    for (int i = 0; i < games.length; i++)
+      {
+        pen.print(" " + (i + 1) + ".");
+        printDate(games[i].date, pen);
+        pen.println("  " + " " + games[i].home.abrev + " vs. "
+                    + games[i].away.abrev + " at " + games[i].away.name);
+      }//for loop
+  }//schedPrint(PrintWriter, Game[])
+
+  /**
+   * Print out a specific date in our format
+   * @param date
+   * @param pen
+   */
+  public static void printDate(LocalDate date, PrintWriter pen)
+  {
+    int day = date.getDayOfMonth();
+    String month = titleCase(date.getMonth().toString());
+    int year = date.getYear();
+    String weekday = titleCase(date.getDayOfWeek().toString());
+    pen.println(weekday + " " + month + ", " + day + "th " + year);
+  }//void (LocalDate, PrintWriter)
+
+  /**
+   * Turn a string into TitleCase
+   * @param input, a String
+   * @return a String
+   */
+  public static String titleCase(String input)
+  {
+    input = input.toLowerCase();
+    Character first = input.charAt(0);
+    first = Character.toUpperCase(first);
+    return input.replace(input.charAt(0), first);
+  }// camelCase
+
 }//class Utils

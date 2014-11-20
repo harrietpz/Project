@@ -2,17 +2,31 @@ package grinnell.edu.project;
 
 import java.time.LocalDate;
 import java.util.Date;
-
+/**
+ * A class describing a particular game
+ * 
+ * @author Ajuna Kyaruzi
+ * @author Leah Greenberg
+ * @author Eileen Fordham
+ * @author Hattie Zucker
+ *
+ */
 public class Game
 {
   //+--------+----------------------------------------------------------
   //| Fields |
   //+--------+
-  //holds the date of a game
+  /**
+   * holds the date of a game
+   */
   LocalDate date;
-  //holds the first school
+  /**
+   * holds the first school
+   */
   School away;
-  //holds the second school, the location of the game
+  /**
+   * holds the second school, the location of the game
+   */
   School home;
  
   //+--------------+---------------------------------------------------
@@ -29,6 +43,10 @@ public class Game
   //+---------+-----------------------------------------------------
   //| Methods |
   //+---------+
+  /**
+   * Finds the distance between the two schools for a given game
+   * @return int, representing distance in whatever unit given
+   */
   public int distance()
   {
     //STUB
