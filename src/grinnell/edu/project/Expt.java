@@ -43,8 +43,20 @@ public class Expt
     Game game5 =
         new Game(LocalDate.parse("2014-11-23".subSequence(0, 10)), school1,
                  school3);
-    Game[] games = { game1, game2, game3, game4, game5 };
+    ArrayList<Game> games = new ArrayList<Game>(5) ;
+    games.add(game5);
+    games.add(game4);
+    games.add(game3);
+    games.add(game2);
+    games.add(game1);
 
+    School[] shules = {school1, school2, school3} ;
+    SchoolSet schools = new SchoolSet(shules, dating) ;
+    schools.setGames(games);
+    
+    Utils.schedPrint(pen, schools);
+    
+    
   }//main
 
 }// class Expt

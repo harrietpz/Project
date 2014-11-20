@@ -33,4 +33,13 @@ public class SchoolSet
     this.season = season ;
     this.games = null;
   }//SchoolSet()
+  
+  //+---------+-----------------------------------------------------
+  //| Methods |
+  //+---------+
+  
+  public void setGames(ArrayList<Game> games)
+  {
+    this.games = games ;
+  }//setGames(ArrayList<Game>
 }//class SchoolSet
