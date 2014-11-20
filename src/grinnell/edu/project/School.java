@@ -1,6 +1,7 @@
 package grinnell.edu.project;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 /**
  * A class containing information about a school
  * 
@@ -19,11 +20,11 @@ public class School
   /**
    * holds necessary dates of play
    */
-  LocalDate[] yesDates;
+  ArrayList<LocalDate> yesDates;
   /**
    * holds restrictions of play
    */
-  LocalDate[] noDates;
+  ArrayList<LocalDate> noDates;
   /**
    * holds counter of scheduled games
    */
@@ -41,7 +42,7 @@ public class School
   //| Constructors |
   //+--------------+
 
-  public School(LocalDate[] dates, LocalDate[] dates2, String name, String abrev)
+  public School(ArrayList<LocalDate>dates, ArrayList<LocalDate> dates2, String name, String abrev)
   {
     this.yesDates = dates;
     this.noDates = dates2;

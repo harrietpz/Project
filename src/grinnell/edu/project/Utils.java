@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -62,7 +63,7 @@ public class Utils
       return null;
 
     int numberOfSchools = Integer.valueOf(cursor.next());
-    LocalDate[] season = StringToDate((cursor.next()).split(", "));
+    ArrayList<LocalDate> season = stringToDate((cursor.next()).split(", "));
 
     School[] schoolArray = new School[numberOfSchools];
     int i = 0;
@@ -71,8 +72,8 @@ public class Utils
         School tmp = new School();
         tmp.name = cursor.next();
         tmp.abrev = cursor.next();
-        tmp.yesDates = StringToDate((cursor.next()).split(", "));
-        tmp.noDates = StringToDate((cursor.next()).split(", "));
+        tmp.yesDates = stringToDate((cursor.next()).split(", "));
+        tmp.noDates = stringToDate((cursor.next()).split(", "));
         cursor.next();
         i++;
       }//while
@@ -107,21 +108,21 @@ public class Utils
   /**
    * Method to convert a string to an array of LocalDates
    * @param input, a String[]
-   * @return a LocalDate[]
+   * @return an ArrayList of LocalDates
    */
-  public static LocalDate[] StringToDate(String[] input)
+  public static ArrayList<LocalDate> stringToDate(String[] input)
   {
     int count = input.length;
 
-    LocalDate[] vals = new LocalDate[count];
+    ArrayList<LocalDate> vals = new ArrayList<LocalDate>(count);
     for (int i = 0; i < count; i++)
       {
         CharSequence tmp = input[i].subSequence(0, input[i].length());
-        vals[i] = LocalDate.parse(tmp);
+        vals.add(i, LocalDate.parse(tmp));
       }//for
 
     return vals;
-  }//StringToDate(String)
+  }//stringToDate(String)
 
   /**
    * Print out our entire schedule of games and dates

@@ -1,7 +1,6 @@
 package grinnell.edu.project;
 
 import java.time.LocalDate;
-import java.util.Date;
 /**
  * A class describing a particular game
  * 

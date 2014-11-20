@@ -1,6 +1,7 @@
 package grinnell.edu.project;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 /**
  * A class describing a set of School objects
  * 
@@ -18,13 +19,13 @@ public class SchoolSet
   //holds the names of schools
   School[] schools;
   //holds the possible dates of play
-  LocalDate[] season;
+  ArrayList<LocalDate> season;
 
   //+--------------+---------------------------------------------------
   //| Constructors |
   //+--------------+
 
-  public SchoolSet(School[] schools, LocalDate[] season)
+  public SchoolSet(School[] schools, ArrayList<LocalDate> season)
   {
     this.schools = schools ;
     this.season = season ;
