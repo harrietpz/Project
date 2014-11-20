@@ -64,17 +64,17 @@ public class Utils
 
     int numberOfSchools = Integer.valueOf(cursor.next());
     ArrayList<LocalDate> season = stringToDate((cursor.next()).split(", "));
-
+    
     School[] schoolArray = new School[numberOfSchools];
     int i = 0;
     while (cursor.hasNext() && i < numberOfSchools)
       {
+        cursor.next();
         School tmp = new School();
         tmp.name = cursor.next();
         tmp.abrev = cursor.next();
         tmp.yesDates = stringToDate((cursor.next()).split(", "));
         tmp.noDates = stringToDate((cursor.next()).split(", "));
-        cursor.next();
         i++;
       }//while
 
@@ -106,7 +106,7 @@ public class Utils
   }//distanceReader(List<String>)
 
   /**
-   * Method to convert a string to an array of LocalDates
+   * Method to convert a string to an array list of LocalDates
    * @param input, a String[]
    * @return an ArrayList of LocalDates
    */
