@@ -20,6 +20,8 @@ public class SchoolSet
   School[] schools;
   //holds the possible dates of play
   ArrayList<LocalDate> season;
+  //holds all the games in the schedule
+  ArrayList<Game> games;
 
   //+--------------+---------------------------------------------------
   //| Constructors |
@@ -29,5 +31,6 @@ public class SchoolSet
   {
     this.schools = schools ;
     this.season = season ;
+    this.games = null;
   }//SchoolSet()
 }//class SchoolSet

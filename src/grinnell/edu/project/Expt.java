@@ -44,7 +44,6 @@ public class Expt
         new Game(LocalDate.parse("2014-11-23".subSequence(0, 10)), school1,
                  school3);
     Game[] games = { game1, game2, game3, game4, game5 };
-    Utils.schedPrint(pen, games);
 
   }//main
 

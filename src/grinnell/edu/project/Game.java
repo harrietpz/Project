@@ -38,19 +38,4 @@ public class Game
     this.away = school1;
     this.home = school2;
   }//Game()
-
-  //+---------+-----------------------------------------------------
-  //| Methods |
-  //+---------+
-  /**
-   * Finds the distance between the two schools for a given game
-   * @return int, representing distance in whatever unit given
-   */
-  public int distance()
-  {
-    //STUB
-    return 0;
-  }//distance()
-
-}
-//class Game
+}//class Game

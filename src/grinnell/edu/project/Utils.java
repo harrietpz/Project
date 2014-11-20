@@ -129,15 +129,16 @@ public class Utils
    * @param pen
    * @param games
    */
-  public static void schedPrint(PrintWriter pen, Game[] games)
+  public static void schedPrint(PrintWriter pen, SchoolSet schools)
   {
+    ArrayList<Game> games = schools.games ;
     pen.println("Schedule of Games");
-    for (int i = 0; i < games.length; i++)
+    for (int i = 0; i < games.size(); i++)
       {
         pen.print(" " + (i + 1) + ".");
-        printDate(games[i].date, pen);
-        pen.println("  " + " " + games[i].home.abrev + " vs. "
-                    + games[i].away.abrev + " at " + games[i].away.name);
+        printDate(games.get(i).date, pen);
+        pen.println("  " + " " + games.get(i).home.abrev + " vs. "
+                    + games.get(i).away.abrev + " at " + games.get(i).away.name);
       }//for loop
   }//schedPrint(PrintWriter, Game[])
 
