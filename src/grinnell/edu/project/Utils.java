@@ -64,17 +64,33 @@ public class Utils
 
     int numberOfSchools = Integer.valueOf(cursor.next());
     ArrayList<LocalDate> season = stringToDate((cursor.next()).split(", "));
-    
+
     School[] schoolArray = new School[numberOfSchools];
     int i = 0;
     while (cursor.hasNext() && i < numberOfSchools)
       {
         cursor.next();
-        School tmp = new School();
-        tmp.name = cursor.next();
-        tmp.abrev = cursor.next();
-        tmp.yesDates = stringToDate((cursor.next()).split(", "));
-        tmp.noDates = stringToDate((cursor.next()).split(", "));
+        String name = cursor.next();
+        String abrev = cursor.next();
+        ArrayList<LocalDate> yesDates =
+            stringToDate((cursor.next()).split(", "));
+        ArrayList<LocalDate> noDates =
+            stringToDate((cursor.next()).split(", "));
+        
+        ArrayList<String> plays = new ArrayList<String>(16) ;
+        String[] twice = cursor.next().split(" ") ;
+        String[] once = cursor.next().split(" ");
+        for (int j = 0 ; j < twice.length ; j++)
+          {
+            plays.add(twice[j]);
+            plays.add(twice[j]);
+          }//for
+        for (int j = 0 ; j < once.length ; j++)
+          {
+            plays.add(once[j]);
+          }//for
+        
+        schoolArray[i] = new School(name, abrev, yesDates, noDates, plays);
         i++;
       }//while
 
@@ -105,6 +121,7 @@ public class Utils
 
   }//distanceReader(List<String>)
 
+  
   /**
    * Method to convert a string to an array list of LocalDates
    * @param input, a String[]
@@ -131,7 +148,7 @@ public class Utils
    */
   public static void schedPrint(PrintWriter pen, SchoolSet schools)
   {
-    ArrayList<Game> games = schools.games ;
+    ArrayList<Game> games = schools.games;
     pen.println("Schedule of Games");
     for (int i = 0; i < games.size(); i++)
       {

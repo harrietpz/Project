@@ -38,8 +38,24 @@ public class SchoolSet
   //| Methods |
   //+---------+
   
+  /**
+   * Setting the ArrayList<Games> for the school as null
+   * @param games
+   */
   public void setGames(ArrayList<Game> games)
   {
     this.games = games ;
   }//setGames(ArrayList<Game>
+  
+  public School getSchool(String abbrev)
+  {
+    int size = this.schools.length ;
+    
+    for (int i = 0 ; i < size ; i++)
+      {
+        if (schools[i].abrev == abbrev)
+          return schools[i] ;
+      }//for
+    return null ;
+  }
 }//class SchoolSet

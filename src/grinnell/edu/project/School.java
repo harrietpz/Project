@@ -2,6 +2,7 @@ package grinnell.edu.project;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+
 /**
  * A class containing information about a school
  * 
@@ -28,7 +29,7 @@ public class School
   /**
    * holds an ArrayList of schools it has to play
    */
-  ArrayList<String> plays ;
+  ArrayList<String> plays;
   /**
    * holds the name of the school
    */
@@ -38,26 +39,46 @@ public class School
    */
   String abrev;
 
+  /**
+   * Number of away games they need to play
+   */
+  int awayGamesLeft;
+
+  /**
+   * Number of home games they need to play
+   */
+  int homeGamesLeft;
+
   //+--------------+---------------------------------------------------
   //| Constructors |
   //+--------------+
 
-  public School(ArrayList<LocalDate>dates, ArrayList<LocalDate> dates2, String name, String abrev)
+  /**
+   * 
+   * @param dates
+   * @param dates2
+   * @param name
+   * @param abrev
+   */
+  public School(String name, String abrev, ArrayList<LocalDate> dates, ArrayList<LocalDate> dates2, ArrayList<String> plays)
   {
     this.yesDates = dates;
     this.noDates = dates2;
     this.name = name;
     this.abrev = abrev;
-    this.plays = null ;
-  }//School(int[], int[], String, String)
-  
-  public School()
-  {
-  }//School()
+    this.plays = plays;
+    this.awayGamesLeft = 8;
+    this.homeGamesLeft = 8;
+  }//School(ArrayList, ArrayList, String, String)
+
 
   //+---------+-----------------------------------------------------
   //| Methods |
   //+---------+
-
+  
+  public Boolean needsAway()
+  {
+    return this.homeGamesLeft <= this.awayGamesLeft ;
+  }//needsAway
 
 }//class School

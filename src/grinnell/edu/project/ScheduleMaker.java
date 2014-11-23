@@ -3,6 +3,7 @@ package grinnell.edu.project;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Methods for making a schedule of games
@@ -24,15 +25,14 @@ public class ScheduleMaker
   {
     while (!fulfilled(schools))
       {
-        LocalDate date = null;
-        while (date == null)
+        Game game = null;
+        while (game == null)
           {
             School[] pair = getCompatibleSchools(schools);
-            date =
-                findDate(schools, pair[0], pair[1], schools.season, distances);
-            if (date != null)
+            game =
+                findGame(schools, pair[0], pair[1], schools.season, distances);
+            if (game != null)
               {
-                Game game = new Game(date, pair[0], pair[1]);
                 if (!checkIfPlayed(schools, game))
                   {
                     schools.games.add(game);
@@ -51,36 +51,74 @@ public class ScheduleMaker
    * @param schools
    * @return 
    */
-  public static School[] getCompatibleSchools(SchoolSet schools)
+  public static School[] getCompatibleSchools(SchoolSet set)
   {
-    //STUB
-    return null;
+    Random rand = new Random();
+    School school1 = set.schools[rand.nextInt(set.schools.length)];
+    int playSize = school1.plays.size();
+    while (playSize < 1)
+      {
+        school1 = set.schools[rand.nextInt(set.schools.length)];
+      }
+    String abbrev = school1.plays.get(rand.nextInt(playSize));
+    School school2 = set.getSchool(abbrev);
+    boolean needsAway1 = school1.needsAway();
+    int i = 0;
+    while (school2.needsAway() == needsAway1 && i < (playSize * 2))
+      {
+        abbrev = school1.plays.get(rand.nextInt(playSize));
+        school2 = set.getSchool(abbrev);
+        i++;
+      }
+    School[] pair;
+    if (needsAway1)
+      {
+        pair = new School[] { school1, school2 };
+      }
+    else
+      {
+        pair = new School[] { school2, school1 };
+      }
+    return pair;
   }//getCompatibleSchool(SchoolSet)
 
   /**
-   * Finds a working date or null if no date is possible between those schools.
-   * @param schools
+   * Finds a working game or null if no date is possible between those schools.
+   * @param set
    * @param school1
    * @param school2
    * @param season
    * @param distance
-   * @return playDate, a LocalDate
+   * @return game
    */
-  public static LocalDate findDate(SchoolSet schools, School school1,
-                                   School school2, ArrayList<LocalDate> season,
-                                   Distance[] distance)
+  public static Game findGame(SchoolSet set, School school1, School school2,
+                              ArrayList<LocalDate> season, Distance[] distance)
   {
     //Pick random date
-    //check if date value is null
-    //if fails, return null
-    //if succeeds, return date
-
-    //Try multiple times until we get the best date.
-    return null;
-  }//findDate(SchoolSet, School, School, ArrayList<LocalDate>, Distance)
+    Random rand = new Random();
+    LocalDate date = season.get(rand.nextInt(season.size()));
+    Game game = new Game(date, school1, school2);
+    //check date
+    int checkValue = checkDate(set, game, distance);
+    ;
+    int i = 0;
+    while (checkValue < 1 && i < season.size())
+      {
+        date = season.get(rand.nextInt(season.size()));
+        game = new Game(date, school1, school2);
+        i++;
+      }
+    //if  no valid dates, return null
+    if (checkValue == -1)
+      {
+        return null;
+      }
+    //if succeeds, return game
+    return game;
+  }//findGame(SchoolSet, School, School, ArrayList<LocalDate>, Distance)
 
   /**
-   * Checks if the Date works for both schools
+   * Checks if the date of a game works for both schools
    * @param schools
    * @param game
    * @param distance
@@ -91,12 +129,12 @@ public class ScheduleMaker
     checkDate(SchoolSet schools, Game game, Distance[] distance)
   {
     int result = -1;
-    if (game.away.noDates.contains(game.date) 
+    if (game.away.noDates.contains(game.date)
         || game.home.noDates.contains(game.date))
       {
         return result;
       }//if
-    if (!checkIfPlayed(schools,game))
+    if (!checkIfPlayed(schools, game))
       {
         if (game.date.getDayOfWeek() == DayOfWeek.TUESDAY
             || game.date.getDayOfWeek() == DayOfWeek.WEDNESDAY)
@@ -106,7 +144,7 @@ public class ScheduleMaker
                 result = 0;
               }//if
           }//if
-        if (game.away.yesDates.contains(game.date) 
+        if (game.away.yesDates.contains(game.date)
             || game.home.yesDates.contains(game.date))
           {
             result = 1;
@@ -127,7 +165,29 @@ public class ScheduleMaker
   {
     //Go through SchoolSet's games field, check all the games for either schools
     //and that date
-    return false;
+    ArrayList<Game> schoolGames = schools.games;
+
+    //If the exact game is in schoolGames, no need to iterate, return it
+    Boolean boole = schoolGames.contains(game);
+
+    if (!boole)
+      {
+        int size = schoolGames.size();
+        for (int i = 0; i < size; i++)
+          {
+            Game current = schoolGames.get(i);
+            if (current.date == game.date)
+              {
+                if (current.away == game.away || current.home == game.away
+                    || current.away == game.home || current.home == game.home)
+                  {
+                    boole = true;
+                  }//if
+              }//if
+          }//for
+      }//if
+
+    return boole;
   }//checkIfPlayed(SchoolSet, Game)
 
   /**
@@ -159,20 +219,22 @@ public class ScheduleMaker
    * Removes the date from each schools' yesDates list if it exists. 
    * @param game, a Game
    */
-  public static void
-    updateSchools(Game game)
+  public static void updateSchools(Game game)
   {
-    School school1 = game.home ;
-    School school2 = game.away ;
-    LocalDate day = game.date ;
+    School school1 = game.away;
+    School school2 = game.home;
+    LocalDate day = game.date;
     if (school1.plays.contains(school2.abrev))
       {
-        school1.plays.remove(school1.abrev);
-        school2.plays.remove(school2.abrev);
+        school1.plays.remove(school2.abrev);
+        school2.plays.remove(school1.abrev);
       } //if
     if (school1.yesDates.contains(day))
       {
         school1.yesDates.remove(day);
+      }
+    if (school2.yesDates.contains(day))
+      {
         school2.yesDates.remove(day);
       } //if
   }//updateSchools(Game)
@@ -180,13 +242,20 @@ public class ScheduleMaker
   /**
    * Checks  if all the schools within the SchoolSet 
    * Have empty play lists (fulfilling the playing requirements). 
-   * @param schools
+   * @param set
    * @return
    */
-  public static boolean fulfilled(SchoolSet schools)
+  public static boolean fulfilled(SchoolSet set)
   {
-    //STUB
-    return false;
+    boolean fulfilled = true;
+    for(int i = 0; i < set.schools.length; i++)
+      {
+        if(!set.schools[i].plays.isEmpty())
+          {
+            fulfilled = false;
+          } // if school needs games
+      } // for all schools
+    return fulfilled;
   }//fulfilled(SchoolSet)
 
 }//class ScheduleMaker
