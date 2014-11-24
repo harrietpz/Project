@@ -31,7 +31,7 @@ public class SchoolSet
   {
     this.schools = schools ;
     this.season = season ;
-    this.games = null;
+    this.games = new ArrayList<Game>();
   }//SchoolSet()
   
   //+---------+-----------------------------------------------------
@@ -53,7 +53,8 @@ public class SchoolSet
     
     for (int i = 0 ; i < size ; i++)
       {
-        if (schools[i].abrev == abbrev)
+        //System.err.println(i + ". " + schools[i].abrev);
+        if (schools[i].abrev.equals(abbrev))
           return schools[i] ;
       }//for
     return null ;

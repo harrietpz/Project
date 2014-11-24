@@ -78,7 +78,7 @@ public class School
   
   public Boolean needsAway()
   {
-    return this.homeGamesLeft <= this.awayGamesLeft ;
+    return (this.homeGamesLeft <= this.awayGamesLeft) ;
   }//needsAway
 
 }//class School

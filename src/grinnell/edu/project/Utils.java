@@ -72,24 +72,32 @@ public class Utils
         cursor.next();
         String name = cursor.next();
         String abrev = cursor.next();
-        ArrayList<LocalDate> yesDates =
-            stringToDate((cursor.next()).split(", "));
-        ArrayList<LocalDate> noDates =
-            stringToDate((cursor.next()).split(", "));
-        
-        ArrayList<String> plays = new ArrayList<String>(16) ;
-        String[] twice = cursor.next().split(" ") ;
+        String yes = (cursor.next());
+        ArrayList<LocalDate> yesDates = null;
+        if (yes != "")
+          {
+            yesDates = stringToDate(yes.split(", "));
+          }//if
+        String no = (cursor.next());
+        ArrayList<LocalDate> noDates = null;
+        if (no != "")
+          {
+            noDates = stringToDate(no.split(", "));
+          }//if
+
+        ArrayList<String> plays = new ArrayList<String>(16);
+        String[] twice = cursor.next().split(" ");
         String[] once = cursor.next().split(" ");
-        for (int j = 0 ; j < twice.length ; j++)
+        for (int j = 0; j < twice.length; j++)
           {
             plays.add(twice[j]);
             plays.add(twice[j]);
           }//for
-        for (int j = 0 ; j < once.length ; j++)
+        for (int j = 0; j < once.length; j++)
           {
             plays.add(once[j]);
           }//for
-        
+
         schoolArray[i] = new School(name, abrev, yesDates, noDates, plays);
         i++;
       }//while
@@ -121,7 +129,6 @@ public class Utils
 
   }//distanceReader(List<String>)
 
-  
   /**
    * Method to convert a string to an array list of LocalDates
    * @param input, a String[]
@@ -134,8 +141,11 @@ public class Utils
     ArrayList<LocalDate> vals = new ArrayList<LocalDate>(count);
     for (int i = 0; i < count; i++)
       {
-        CharSequence tmp = input[i].subSequence(0, input[i].length());
-        vals.add(i, LocalDate.parse(tmp));
+        if (input[i] != " ")
+          {
+            CharSequence tmp = input[i].subSequence(0, input[i].length());
+            vals.add(i, LocalDate.parse(tmp));
+          }
       }//for
 
     return vals;
