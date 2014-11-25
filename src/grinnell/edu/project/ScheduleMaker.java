@@ -26,6 +26,7 @@ public class ScheduleMaker
     while (!fulfilled(schools))
       {
         Game game = null;
+        // checks if the games found are valid
         while (game == null)
           {
             School[] pair = getCompatibleSchools(schools);
@@ -36,7 +37,8 @@ public class ScheduleMaker
                 if (!checkIfPlayed(schools, game))
                   {
                     schools.games.add(game);
-                    System.out.println(game.home.name + " vs. " + game.away.name + " on " + game.date);
+                    System.out.println(game.home.name + " vs. "
+                                       + game.away.name + " on " + game.date);
                     updateSchools(game);
                   }//if
               } //if
@@ -65,7 +67,7 @@ public class ScheduleMaker
     School school2 = set.getSchool(abbrev);
     boolean needsAway1 = school1.needsAway();
     int i = 0;
-    while (school2.needsAway() != needsAway1 && i < (playSize * 2))
+    while (school2.needsAway() == needsAway1 && i < (playSize * 2))
       {
         abbrev = school1.plays.get(rand.nextInt(playSize));
         school2 = set.getSchool(abbrev);
@@ -95,32 +97,33 @@ public class ScheduleMaker
   public static Game findGame(SchoolSet set, School school1, School school2,
                               ArrayList<LocalDate> season, Distance[] distance)
   {
+    int i = 0;
     //Pick random date
     Random rand = new Random();
     LocalDate date = season.get(rand.nextInt(season.size()));
+    
     Game game = new Game(date, school1, school2);
     //check date
     int checkValue = checkDate(set, game, distance);
-    int oldValue = checkValue ;
-    Game oldGame = game ;
-    
-    int i = 0;
+    int oldValue = checkValue;
+    Game oldGame = game;
+
     while (checkValue < 1 && i < season.size())
       {
         date = season.get(rand.nextInt(season.size()));
         game = new Game(date, school1, school2);
-        
-        checkValue = checkDate(set, game,distance);
+        //System.out.println("got a date");
+        checkValue = checkDate(set, game, distance);
         if (checkValue > oldValue)
           {
             //make the oldvalue, the checkvalue
-            oldValue = checkValue ;
-            oldGame = game ;
+            oldValue = checkValue;
+            oldGame = game;
           }//if found a better date, update 
         
         i++;
       }//while
-    
+
     //if  no valid dates, return null
     if (checkValue == -1)
       {
@@ -141,20 +144,20 @@ public class ScheduleMaker
   public static int
     checkDate(SchoolSet schools, Game game, Distance[] distance)
   {
-    int result = -1;
+    int result = 0;
     if (game.away.noDates.contains(game.date)
         || game.home.noDates.contains(game.date))
       {
-        return result;
+        return -1;
       }//if
     if (!checkIfPlayed(schools, game))
       {
         if (game.date.getDayOfWeek().equals(DayOfWeek.TUESDAY)
             || game.date.getDayOfWeek().equals(DayOfWeek.WEDNESDAY))
           {
-            if (findDistance(game.home, game.away, distance) <= 270)
+            if (findDistance(game.home, game.away, distance) > 270)
               {
-                result = 0;
+                return -1;
               }//if
           }//if
         if (game.away.yesDates.contains(game.date)
@@ -179,16 +182,16 @@ public class ScheduleMaker
     ArrayList<Game> schoolGames = schools.games;
 
     //If the exact game is in schoolGames, no need to iterate, return it
-    Boolean boole = false ; 
+    Boolean boole = false;
     if (schoolGames.size() == 0)
       {
-        return false ;
+        return false;
       }//if
     else
       {
         boole = schoolGames.contains(game);
       }//else
-    
+
     if (!boole)
       {
         int size = schoolGames.size();
@@ -197,8 +200,10 @@ public class ScheduleMaker
             Game current = schoolGames.get(i);
             if (current.date.equals(game.date))
               {
-                if (current.away.equals(game.away) || current.home.equals(game.away)
-                    || current.away.equals(game.home) || current.home.equals(game.home))
+                if (current.away.equals(game.away)
+                    || current.home.equals(game.away)
+                    || current.away.equals(game.home)
+                    || current.home.equals(game.home))
                   {
                     boole = true;
                   }//if
@@ -269,9 +274,9 @@ public class ScheduleMaker
   public static boolean fulfilled(SchoolSet set)
   {
     boolean fulfilled = true;
-    for(int i = 0; i < set.schools.length; i++)
+    for (int i = 0; i < set.schools.length; i++)
       {
-        if(!set.schools[i].plays.isEmpty())
+        if (!set.schools[i].plays.isEmpty())
           {
             fulfilled = false;
           } // if school needs games
