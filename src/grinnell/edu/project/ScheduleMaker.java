@@ -25,24 +25,25 @@ public class ScheduleMaker
   {
     while (!fulfilled(schools))
       {
+        //int counter = 0;
         Game game = null;
         // checks if the games found are valid
-        while (game == null)
+        //        while (game == null)
+        //          {
+        School[] pair = getCompatibleSchools(schools);
+        game = findGame(schools, pair[0], pair[1], schools.season, distances);
+        if (game != null)
           {
-            School[] pair = getCompatibleSchools(schools);
-            game =
-                findGame(schools, pair[0], pair[1], schools.season, distances);
-            if (game != null)
-              {
-                if (!checkIfPlayed(schools, game))
-                  {
-                    schools.games.add(game);
-                    System.out.println(game.home.name + " vs. "
-                                       + game.away.name + " on " + game.date);
-                    updateSchools(game);
-                  }//if
-              } //if
-          } //while
+            schools.games.add(game);
+            System.out.println(game.home.name + " vs. " + game.away.name + " on "
+                               + game.date);
+            updateSchools(game);
+          } //if
+        else
+          {
+            // remove 10 (for loop?) , update (method?) etc.
+          }
+
       } //while
     return schools;
   }//makeSchedule(SchoolSet)
@@ -101,7 +102,7 @@ public class ScheduleMaker
     //Pick random date
     Random rand = new Random();
     LocalDate date = season.get(rand.nextInt(season.size()));
-    
+
     Game game = new Game(date, school1, school2);
     //check date
     int checkValue = checkDate(set, game, distance);
@@ -120,7 +121,7 @@ public class ScheduleMaker
             oldValue = checkValue;
             oldGame = game;
           }//if found a better date, update 
-        
+
         i++;
       }//while
 
@@ -128,6 +129,7 @@ public class ScheduleMaker
     if (checkValue == -1)
       {
         return null;
+        
       }
     //if succeeds, return best game
     return oldGame;
@@ -144,7 +146,7 @@ public class ScheduleMaker
   public static int
     checkDate(SchoolSet schools, Game game, Distance[] distance)
   {
-    int result = 0;
+    int result = -1;
     if (game.away.noDates.contains(game.date)
         || game.home.noDates.contains(game.date))
       {
@@ -165,6 +167,10 @@ public class ScheduleMaker
           {
             result = 1;
           }//if
+        else
+          {
+            result = 0;
+          }// else
       }//if
     return result;
   }//checkDate(SchoolSet, Game, Distance)
@@ -283,5 +289,6 @@ public class ScheduleMaker
       } // for all schools
     return fulfilled;
   }//fulfilled(SchoolSet)
+
 
 }//class ScheduleMaker
