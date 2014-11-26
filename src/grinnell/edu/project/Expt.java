@@ -52,34 +52,36 @@ public class Expt
     School school3 =
         new School("Third School", "TS", datingYes, datingNo, TSplays);
 
-//    String date1 = "2014-11-19";
-//    Game game1 =
-//        new Game(LocalDate.parse(date1.subSequence(0, date1.length())),
-//                 school1, school2);
-//    Game game2 =
-//        new Game(LocalDate.parse("2014-11-20".subSequence(0, 10)), school2,
-//                 school1);
-//    Game game3 =
-//        new Game(LocalDate.parse("2014-11-21".subSequence(0, 10)), school3,
-//                 school2);
-//    Game game4 =
-//        new Game(LocalDate.parse("2014-11-22".subSequence(0, 10)), school2,
-//                 school3);
-//    Game game5 =
-//        new Game(LocalDate.parse("2014-11-23".subSequence(0, 10)), school1,
-//                 school3);
-//    ArrayList<Game> games = new ArrayList<Game>(5);
-//    games.add(game5);
-//    games.add(game4);
-//    games.add(game3);
-//    games.add(game2);
-//    games.add(game1);
+    String date1 = "2014-11-19";
+    Game game1 =
+        new Game(LocalDate.parse(date1.subSequence(0, date1.length())),
+                 school1, school2);
+    Game game2 =
+        new Game(LocalDate.parse("2014-11-20".subSequence(0, 10)), school2,
+                 school1);
+    Game game3 =
+        new Game(LocalDate.parse("2014-11-21".subSequence(0, 10)), school3,
+                 school2);
+    Game game4 =
+        new Game(LocalDate.parse("2014-11-22".subSequence(0, 10)), school2,
+                 school3);
+    Game game5 =
+        new Game(LocalDate.parse("2014-11-23".subSequence(0, 10)), school1,
+                 school3);
+    ArrayList<Game> games = new ArrayList<Game>(5);
+    games.add(game3);
+    games.add(game5);
+    games.add(game2);
+    games.add(game4);
+    games.add(game1);
 
     School[] shules = { school1, school2, school3 };
     SchoolSet schools = new SchoolSet(shules, dating);
-    //schools.setGames(games);
+    schools.setGames(games);
+   
 
     Utils.schedPrint(pen, schools);
 
+    
   }//main
 }// class Expt

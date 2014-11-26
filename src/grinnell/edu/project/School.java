@@ -53,13 +53,14 @@ public class School
   //| Constructors |
   //+--------------+
 
-  /**
-   * 
-   * @param dates
-   * @param dates2
-   * @param name
-   * @param abrev
-   */
+/**
+ * 
+ * @param name
+ * @param abrev
+ * @param dates
+ * @param dates2
+ * @param plays
+ */
   public School(String name, String abrev, ArrayList<LocalDate> dates, ArrayList<LocalDate> dates2, ArrayList<String> plays)
   {
     this.yesDates = dates;

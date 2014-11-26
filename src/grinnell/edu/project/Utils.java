@@ -158,16 +158,17 @@ public class Utils
    */
   public static void schedPrint(PrintWriter pen, SchoolSet schools)
   {
-    ArrayList<Game> games = schools.games;
+   Game[] games = schools.sortByGameDate() ;
     pen.println("Schedule of Games");
-    for (int i = 0; i < games.size(); i++)
+    
+    for (int i = 0; i < games.length; i++)
       {
         pen.print(" " + (i + 1) + ".");
-        printDate(games.get(i).date, pen);
-        pen.println("  " + " " + games.get(i).home.abrev + " vs. "
-                    + games.get(i).away.abrev + " at " + games.get(i).away.name);
+        printDate(games[i].date, pen);
+        pen.println("  " + " " + games[i].home.abrev + " vs. "
+                    + games[i].away.abrev + " at " + games[i].away.name);
       }//for loop
-  }//schedPrint(PrintWriter, Game[])
+  }//schedPrint(PrintWriter, SchoolSet)
 
   /**
    * Print out a specific date in our format

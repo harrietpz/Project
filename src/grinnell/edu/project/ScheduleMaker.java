@@ -23,9 +23,10 @@ public class ScheduleMaker
    */
   public static SchoolSet makeSchedule(SchoolSet schools, Distance[] distances)
   {
+    Random rand = new Random();
+    int counter = 0;
     while (!fulfilled(schools))
       {
-        //int counter = 0;
         Game game = null;
         // checks if the games found are valid
         //        while (game == null)
@@ -35,15 +36,26 @@ public class ScheduleMaker
         if (game != null)
           {
             schools.games.add(game);
-            System.out.println(game.home.name + " vs. " + game.away.name + " on "
-                               + game.date);
+            System.out.println(game.home.name + " vs. " + game.away.name
+                               + " on " + game.date);
             updateSchools(game);
           } //if
-        else
+        else if (game == null)
           {
-            // remove 10 (for loop?) , update (method?) etc.
-          }
-
+            for (int i = 0; i < (schools.games.size() * .05); i++)
+              {
+                int index = rand.nextInt(schools.games.size());
+                // get random game
+                Game temp = schools.games.get(index);
+                // update game's schools' plays and home/away games and dates
+                reverseUpdateSchools(temp);
+                // remove random game
+                schools.games.remove(index);
+                
+              }//for
+          }//else
+        counter++;
+        //    System.err.println("Not fulfilled " + counter );
       } //while
     return schools;
   }//makeSchedule(SchoolSet)
@@ -62,7 +74,9 @@ public class ScheduleMaker
     int playSize = school1.plays.size();
     while (playSize < 1)
       {
+        //System.err.println("getCompatibleSchools while loop1 ");
         school1 = set.schools[rand.nextInt(set.schools.length)];
+        playSize = school1.plays.size();
       }//while
     String abbrev = school1.plays.get(rand.nextInt(playSize));
     School school2 = set.getSchool(abbrev);
@@ -70,6 +84,7 @@ public class ScheduleMaker
     int i = 0;
     while (school2.needsAway() == needsAway1 && i < (playSize * 2))
       {
+        //System.err.println("getCompatibleSchools while loop2 " + i );
         abbrev = school1.plays.get(rand.nextInt(playSize));
         school2 = set.getSchool(abbrev);
         i++;
@@ -113,7 +128,7 @@ public class ScheduleMaker
       {
         date = season.get(rand.nextInt(season.size()));
         game = new Game(date, school1, school2);
-        //System.out.println("got a date");
+        //System.err.println("got a date");
         checkValue = checkDate(set, game, distance);
         if (checkValue > oldValue)
           {
@@ -129,7 +144,6 @@ public class ScheduleMaker
     if (checkValue == -1)
       {
         return null;
-        
       }
     //if succeeds, return best game
     return oldGame;
@@ -203,6 +217,7 @@ public class ScheduleMaker
         int size = schoolGames.size();
         for (int i = 0; i < size; i++)
           {
+            //System.err.println("checkIfPlayed for loop " + i);
             Game current = schoolGames.get(i);
             if (current.date.equals(game.date))
               {
@@ -234,6 +249,7 @@ public class ScheduleMaker
     String ab2 = school2.abrev;
     for (int i = 0; i < distances.length; i++)
       {
+        //System.err.println("Find Distance for loop " + i);
         Distance dist = distances[i];
         if ((dist.school1.equals(ab1) && dist.school2.equals(ab2))
             || (dist.school1.equals(ab2) && dist.school2.equals(ab1)))
@@ -272,6 +288,21 @@ public class ScheduleMaker
   }//updateSchools(Game)
 
   /**
+   * Removing each school from its partner's plays list 
+   * Removes the date from each schools' yesDates list if it exists. 
+   * @param game, a Game
+   */
+  public static void reverseUpdateSchools(Game game)
+  {
+    School school1 = game.away;
+    School school2 = game.home;
+    school1.plays.add(school2.abrev);
+    school2.plays.add(school1.abrev);
+    school2.homeGamesLeft++;
+    school1.awayGamesLeft++;
+  }//reverseUpdateSchools(Game)
+
+  /**
    * Checks  if all the schools within the SchoolSet 
    * Have empty play lists (fulfilling the playing requirements). 
    * @param set
@@ -282,6 +313,7 @@ public class ScheduleMaker
     boolean fulfilled = true;
     for (int i = 0; i < set.schools.length; i++)
       {
+        //System.err.println("Fulfilled for loop " + i);
         if (!set.schools[i].plays.isEmpty())
           {
             fulfilled = false;
@@ -289,6 +321,5 @@ public class ScheduleMaker
       } // for all schools
     return fulfilled;
   }//fulfilled(SchoolSet)
-
 
 }//class ScheduleMaker
