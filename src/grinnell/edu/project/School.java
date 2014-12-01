@@ -54,12 +54,11 @@ public class School
   //+--------------+
 
 /**
- * 
- * @param name
- * @param abrev
- * @param dates
- * @param dates2
- * @param plays
+ * @param name, a String
+ * @param abrev, a String
+ * @param dates, ArrayList of LocalDates
+ * @param dates2, ArrayList of LocalDates
+ * @param plays, ArrayList of Strings
  */
   public School(String name, String abrev, ArrayList<LocalDate> dates, ArrayList<LocalDate> dates2, ArrayList<String> plays)
   {
@@ -70,16 +69,22 @@ public class School
     this.plays = plays;
     this.awayGamesLeft = 8;
     this.homeGamesLeft = 8;
-  }//School(ArrayList, ArrayList, String, String)
+  }//School(String, String, ArrayList, ArrayList, ArrayList)
 
 
   //+---------+-----------------------------------------------------
   //| Methods |
   //+---------+
   
+  /**
+   * Checks if the school needs more away games than home games
+   * @return a boolean
+   * @post returns true if awayGamesLeft is greater than or equal to 
+   * homeGamesLeft, false otherwise.
+   */
   public Boolean needsAway()
   {
     return (this.homeGamesLeft <= this.awayGamesLeft) ;
-  }//needsAway
+  }//needsAway()
 
 }//class School

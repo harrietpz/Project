@@ -6,7 +6,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.List;
 /**
- * A user interface to make game schedules
+ * A user interface to make a randomized schedule of games
+ * in response to two input files.
  * 
  * @author Ajuna Kyaruzi
  * @author Leah Greenberg
@@ -32,5 +33,5 @@ public class UserInterface
     Distance[] distances = Utils.distanceReader(distanceFile);
     //make and print the schedule
     Utils.schedPrint(pen, ScheduleMaker.makeSchedule(schools, distances));
-  }//main
+  }//main(String[])
 }// class UserInterface

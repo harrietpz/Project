@@ -20,36 +20,45 @@ public class SchoolSet
   //+--------+----------------------------------------------------------
   //| Fields |
   //+--------+
-  //holds the names of schools
+  /**
+   * holds all of the schools
+   */
   School[] schools;
-  //holds the possible dates of play
+  /**
+   * holds the possible dates of play in the season
+   */
   ArrayList<LocalDate> season;
-  //holds all the games in the schedule
+  /**
+   * holds all the games in the schedule
+   */
   ArrayList<Game> games;
 
   //+--------------+---------------------------------------------------
   //| Constructors |
   //+--------------+
-
+  /**
+   * @param schools, an array of Schools
+   * @param season, an ArrayList of LocalDates
+   */
   public SchoolSet(School[] schools, ArrayList<LocalDate> season)
   {
     this.schools = schools;
     this.season = season;
     this.games = new ArrayList<Game>();
-  }//SchoolSet()
+  }//SchoolSet(School[], ArrayList<LocalDate>)
 
   // +-----------+-------------------------------------------------------
   // | Constants |
   // +-----------+
 
   /**
-   * A comparator for integers.
+   * A comparator for School names.
    */
   public static final Comparator<School> standardSchoolComparator =
       (left, right) -> left.name.compareTo(right.name);
 
   /**
-   * A comparator for integers.
+   * A comparator for Game dates.
    */
   public static final Comparator<Game> standardGameComparator =
       (left, right) -> left.date.compareTo(right.date);
@@ -59,18 +68,24 @@ public class SchoolSet
   //+---------+
 
   /**
-   * Setting the ArrayList<Games> for the school as null
+   * Sets ArrayList<Games> as the given ArrayList of games.
    * @param games
    */
   public void setGames(ArrayList<Game> games)
   {
     this.games = games;
-  }//setGames(ArrayList<Game>
+  }//setGames(ArrayList<Game>)
 
+  /**
+   * Finds the School within the SchoolSet corresponding to
+   * the given abbreviation
+   * @param abbrev, a String
+   * @return a School or null
+   * @post returns the corresponding school if it exists or null if not
+   */
   public School getSchool(String abbrev)
   {
     int size = this.schools.length;
-
     for (int i = 0; i < size; i++)
       {
         //System.err.println(i + ". " + schools[i].abrev);
@@ -95,8 +110,13 @@ public class SchoolSet
         this.schools[i] = this.schools[j];
         this.schools[j] = tmp;
       } // for
-  } // shuffle()
+  } // permute()
 
+  /**
+   * Return an array of all of the games in the schedule, sorted by
+   * date.
+   * @return ans, an array of Games
+   */
   public Game[] sortByGameDate()
   { 
     Game[] ans = new Game[this.games.size()];
@@ -105,6 +125,9 @@ public class SchoolSet
     return ans;
   } //sortByGameDate()
 
+  /**
+   * Sort the schools within this.schools in alphabetical order.
+   */
   public void sortBySchool()
   {
     Arrays.sort(this.schools, standardSchoolComparator);
