@@ -84,16 +84,16 @@ public class Utils
         String abrev = cursor.next();
         String yes = (cursor.next());
         ArrayList<LocalDate> yesDates = null;
-        if (yes != "")
+        if (!(yes.isEmpty()))
           {
             yesDates = stringToDate(yes.split(", "));
-          }//if yesDates is null
+          }//if yesDates is not null
         String no = (cursor.next());
         ArrayList<LocalDate> noDates = null;
-        if (no != "")
+        if (!(no.isEmpty()))
           {
             noDates = stringToDate(no.split(", "));
-          }//if noDates is null
+          }//if noDates is not null
         //make an ArrayList to hold plays
         ArrayList<String> plays = new ArrayList<String>(16);
         String[] twice = cursor.next().split(" ");
@@ -154,7 +154,7 @@ public class Utils
     ArrayList<LocalDate> vals = new ArrayList<LocalDate>(count);
     for (int i = 0; i < count; i++)
       {
-        if (input[i] != " ")
+        if (!(input[i].isEmpty()))
           {
             //add to vals
             CharSequence tmp = input[i].subSequence(0, input[i].length());
