@@ -17,55 +17,46 @@ public class ScheduleMaker
 {
   /**
    * Make the schedule of games
-   * @param schools, a SchoolSet
+   * @param set, a SchoolSet
    * @param distances, an array of distances
-   * @return an array of Games
+   * @return The SchoolSet
    */
-  public static SchoolSet makeSchedule(SchoolSet schools, Distance[] distances)
+  public static SchoolSet makeSchedule(SchoolSet set, Distance[] distances)
   {
     Random rand = new Random();
-    int counter = 0;
-    while (!fulfilled(schools))
+    while (!fulfilled(set))
       {
         Game game = null;
-        // checks if the games found are valid
-        //        while (game == null)
-        //          {
-        School[] pair = getCompatibleSchools(schools);
-        game = findGame(schools, pair[0], pair[1], schools.season, distances);
+        School[] pair = getCompatibleSchools(set);
+        game = findGame(set, pair[0], pair[1], set.season, distances);
         if (game != null)
           {
-            schools.games.add(game);
-            System.out.println(game.home.name + " vs. " + game.away.name
-                               + " on " + game.date);
+            set.games.add(game);
             updateSchools(game);
           } //if
         else if (game == null)
           {
-            for (int i = 0; i < (schools.games.size() * .05); i++)
+            for (int i = 0; i < (set.games.size() * .05); i++)
               {
-                int index = rand.nextInt(schools.games.size());
+                int index = rand.nextInt(set.games.size());
                 // get random game
-                Game temp = schools.games.get(index);
+                Game temp = set.games.get(index);
                 // update game's schools' plays and home/away games and dates
                 reverseUpdateSchools(temp);
                 // remove random game
-                schools.games.remove(index);
-                
+                set.games.remove(index);
               }//for
           }//else
-        counter++;
-        //    System.err.println("Not fulfilled " + counter );
       } //while
-    return schools;
-  }//makeSchedule(SchoolSet)
+    return set;
+  }//makeSchedule(SchoolSet, Distance[])
 
   /**
    * Picks a random school and a second school from the first's necessary plays. 
    * If the first's plays list is empty, then pick a new first school again until 
    * Successful.
-   * @param schools
-   * @return 
+   * @param set, a SchoolSet
+   * @return an array of Schools
    */
   public static School[] getCompatibleSchools(SchoolSet set)
   {
@@ -74,7 +65,6 @@ public class ScheduleMaker
     int playSize = school1.plays.size();
     while (playSize < 1)
       {
-        //System.err.println("getCompatibleSchools while loop1 ");
         school1 = set.schools[rand.nextInt(set.schools.length)];
         playSize = school1.plays.size();
       }//while
@@ -84,7 +74,6 @@ public class ScheduleMaker
     int i = 0;
     while (school2.needsAway() == needsAway1 && i < (playSize * 2))
       {
-        //System.err.println("getCompatibleSchools while loop2 " + i );
         abbrev = school1.plays.get(rand.nextInt(playSize));
         school2 = set.getSchool(abbrev);
         i++;
@@ -103,15 +92,15 @@ public class ScheduleMaker
 
   /**
    * Finds a working game or null if no date is possible between those schools.
-   * @param set
-   * @param school1
-   * @param school2
-   * @param season
-   * @param distance
-   * @return game
+   * @param set, a SchoolSet
+   * @param school1, a School
+   * @param school2, a School
+   * @param season, an ArrayList of LocalDates
+   * @param distances, an array of Distances
+   * @return a Game
    */
   public static Game findGame(SchoolSet set, School school1, School school2,
-                              ArrayList<LocalDate> season, Distance[] distance)
+                              ArrayList<LocalDate> season, Distance[] distances)
   {
     int i = 0;
     //Pick random date
@@ -120,7 +109,7 @@ public class ScheduleMaker
 
     Game game = new Game(date, school1, school2);
     //check date
-    int checkValue = checkDate(set, game, distance);
+    int checkValue = checkDate(set, game, distances);
     int oldValue = checkValue;
     Game oldGame = game;
 
@@ -128,37 +117,33 @@ public class ScheduleMaker
       {
         date = season.get(rand.nextInt(season.size()));
         game = new Game(date, school1, school2);
-        //System.err.println("got a date");
-        checkValue = checkDate(set, game, distance);
+        checkValue = checkDate(set, game, distances);
         if (checkValue > oldValue)
           {
             //make the oldvalue, the checkvalue
             oldValue = checkValue;
             oldGame = game;
           }//if found a better date, update 
-
         i++;
-      }//while
-
-    //if  no valid dates, return null
+      }//while   
     if (checkValue == -1)
       {
         return null;
-      }
-    //if succeeds, return best game
+      }//if  no valid dates, return null
+    //otherwise it succeeds so return best game
     return oldGame;
-  }//findGame(SchoolSet, School, School, ArrayList<LocalDate>, Distance)
+  }//findGame(SchoolSet, School, School, ArrayList<LocalDate>, Distance[])
 
   /**
    * Checks if the date of a game works for both schools
-   * @param schools
-   * @param game
-   * @param distance
+   * @param set, a SchoolSet
+   * @param game, a Game
+   * @param distances, an array of Distances
    * @return result, an int
    * @post returns -1 for failure, 0 for acceptance and 1 for preference
    */
   public static int
-    checkDate(SchoolSet schools, Game game, Distance[] distance)
+    checkDate(SchoolSet set, Game game, Distance[] distances)
   {
     int result = -1;
     if (game.away.noDates.contains(game.date)
@@ -166,12 +151,12 @@ public class ScheduleMaker
       {
         return -1;
       }//if
-    if (!checkIfPlayed(schools, game))
+    if (!checkIfPlayed(set, game))
       {
         if (game.date.getDayOfWeek().equals(DayOfWeek.TUESDAY)
             || game.date.getDayOfWeek().equals(DayOfWeek.WEDNESDAY))
           {
-            if (findDistance(game.home, game.away, distance) > 270)
+            if (findDistance(game.home, game.away, distances) > 270)
               {
                 return -1;
               }//if
@@ -187,22 +172,21 @@ public class ScheduleMaker
           }// else
       }//if
     return result;
-  }//checkDate(SchoolSet, Game, Distance)
+  }//checkDate(SchoolSet, Game, Distance[])
 
   /**
    * Checks if either school has played on the specified date
-   * @param schools
-   * @param game
+   * @param set, a SchoolSet
+   * @param game, a Game
    * @return boole, a boolean
    */
-  public static boolean checkIfPlayed(SchoolSet schools, Game game)
+  public static boolean checkIfPlayed(SchoolSet set, Game game)
   {
     //Go through SchoolSet's games field, check all the games for either schools
     //and that date
-    ArrayList<Game> schoolGames = schools.games;
-
-    //If the exact game is in schoolGames, no need to iterate, return it
+    ArrayList<Game> schoolGames = set.games;
     Boolean boole = false;
+    //If the exact game is in schoolGames, no need to iterate, return it
     if (schoolGames.size() == 0)
       {
         return false;
@@ -211,13 +195,11 @@ public class ScheduleMaker
       {
         boole = schoolGames.contains(game);
       }//else
-
     if (!boole)
       {
         int size = schoolGames.size();
         for (int i = 0; i < size; i++)
           {
-            //System.err.println("checkIfPlayed for loop " + i);
             Game current = schoolGames.get(i);
             if (current.date.equals(game.date))
               {
@@ -231,16 +213,15 @@ public class ScheduleMaker
               }//if
           }//for
       }//if
-
     return boole;
   }//checkIfPlayed(SchoolSet, Game)
 
   /**
    * Finds the distance between the two specified schools 
-   * @param school1
-   * @param school2
-   * @param distances
-   * @return howFar, an int
+   * @param school1, a School
+   * @param school2, a School
+   * @param distances, an array of Distances
+   * @return an int
    */
   public static int findDistance(School school1, School school2,
                                  Distance[] distances)
@@ -249,7 +230,6 @@ public class ScheduleMaker
     String ab2 = school2.abrev;
     for (int i = 0; i < distances.length; i++)
       {
-        //System.err.println("Find Distance for loop " + i);
         Distance dist = distances[i];
         if ((dist.school1.equals(ab1) && dist.school2.equals(ab2))
             || (dist.school1.equals(ab2) && dist.school2.equals(ab1)))
@@ -263,6 +243,7 @@ public class ScheduleMaker
   /**
    * Removing each school from its partner's plays list 
    * Removes the date from each schools' yesDates list if it exists. 
+   * Decrements the Home and Away Games of respective schools.
    * @param game, a Game
    */
   public static void updateSchools(Game game)
@@ -288,8 +269,8 @@ public class ScheduleMaker
   }//updateSchools(Game)
 
   /**
-   * Removing each school from its partner's plays list 
-   * Removes the date from each schools' yesDates list if it exists. 
+   * Adds each school to its partner's plays list 
+   * Increments the Home and Away Games of respective schools.
    * @param game, a Game
    */
   public static void reverseUpdateSchools(Game game)
@@ -306,14 +287,15 @@ public class ScheduleMaker
    * Checks  if all the schools within the SchoolSet 
    * Have empty play lists (fulfilling the playing requirements). 
    * @param set
-   * @return
+   * @return a boolean
+   * @post returns true if all the school's in set have empty plays
+   * @post returns false if any school's in set does not have an empty plays
    */
   public static boolean fulfilled(SchoolSet set)
   {
     boolean fulfilled = true;
     for (int i = 0; i < set.schools.length; i++)
       {
-        //System.err.println("Fulfilled for loop " + i);
         if (!set.schools[i].plays.isEmpty())
           {
             fulfilled = false;
@@ -321,5 +303,4 @@ public class ScheduleMaker
       } // for all schools
     return fulfilled;
   }//fulfilled(SchoolSet)
-
 }//class ScheduleMaker

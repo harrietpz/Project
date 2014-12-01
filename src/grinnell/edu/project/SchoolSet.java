@@ -2,6 +2,8 @@ package grinnell.edu.project;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Random;
 
 /**
@@ -35,6 +37,22 @@ public class SchoolSet
     this.season = season;
     this.games = new ArrayList<Game>();
   }//SchoolSet()
+
+  // +-----------+-------------------------------------------------------
+  // | Constants |
+  // +-----------+
+
+  /**
+   * A comparator for integers.
+   */
+  public static final Comparator<School> standardSchoolComparator =
+      (left, right) -> left.name.compareTo(right.name);
+
+  /**
+   * A comparator for integers.
+   */
+  public static final Comparator<Game> standardGameComparator =
+      (left, right) -> left.date.compareTo(right.date);
 
   //+---------+-----------------------------------------------------
   //| Methods |
@@ -80,22 +98,16 @@ public class SchoolSet
   } // shuffle()
 
   public Game[] sortByGameDate()
-  {
+  { 
     Game[] ans = new Game[this.games.size()];
-    for (int i = 0; i < this.games.size(); i++)
-      {
-        ans[i] = this.games.get(i);
-      }//for
-
-    Sorter<Game> gameSort = new NewQuicksorter<Game>();
-    gameSort.sort(ans, StandardGameComparator.COMPARATOR);
+    this.games.toArray(ans) ;
+    Arrays.sort(ans, standardGameComparator);
     return ans;
   } //sortByGameDate()
 
   public void sortBySchool()
   {
-    Sorter<School> schoolSort = new NewQuicksorter<School>();
-    schoolSort.sort(this.schools, StandardSchoolComparator.COMPARATOR);
+    Arrays.sort(this.schools, standardSchoolComparator);
   } //sortBySchool()
 
 }//class SchoolSet
