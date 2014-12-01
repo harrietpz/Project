@@ -7,6 +7,15 @@ import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * A class used for temporary experimentation and bug identification.
+ * 
+ * @author Ajuna Kyaruzi
+ * @author Leah Greenberg
+ * @author Eileen Fordham
+ * @author Hattie Zucker
+ *
+ */
 public class Expt
 {
 
@@ -79,9 +88,7 @@ public class Expt
     SchoolSet schools = new SchoolSet(shules, dating);
     schools.setGames(games);
    
-
     Utils.schedPrint(pen, schools);
 
-    
   }//main
 }// class Expt
