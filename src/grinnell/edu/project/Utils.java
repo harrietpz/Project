@@ -30,46 +30,56 @@ public class Utils
    * @throws IOException
    * @param pen, a PrintWriter
    * @param inputReader, a BufferedReader
+   * @return a linked list 
+   * 
    */
   public static List<String> readFile(PrintWriter pen,
                                       BufferedReader inputReader)
     throws IOException
   {
+    //make a String called userResponse that is the next line from user
     String userResponse = inputReader.readLine();
     pen.flush();
     Path path = FileSystems.getDefault().getPath(userResponse);
 
     while (Files.exists(path, LinkOption.NOFOLLOW_LINKS) == false)
       {
+        //print an error message and restart
         pen.println("File doesn't exist");
         pen.println("Enter filename please: ");
         userResponse = inputReader.readLine();
         pen.flush();
         path = FileSystems.getDefault().getPath(userResponse);
-      }//while
+      }//while the file doesn't exist
+    //read the file into a linked list
     List<String> answer = Files.readAllLines(path);
     return answer;
-  }// readFile()
+  }// readFile(PrintWriter, BufferedReader)
 
   /**
    * Method that turns input into a SchoolSet
    * @param input, a linked list
    * @return a SchoolSet
+   * @pre input must be in the correct format specified in the wiki
    */
   public static SchoolSet schoolReader(List<String> input)
   {
+    //make a list iterator called cursor
     ListIterator<String> cursor = input.listIterator();
     if (input.isEmpty())
       return null;
-
+    //declare and initialize numberOfSchools to be the value from the file
     int numberOfSchools = Integer.valueOf(cursor.next());
+    //declare and initialize season to be the dates in the file, split at commas 
     ArrayList<LocalDate> season = stringToDate((cursor.next()).split(", "));
-
+    //make an array of Schools to hold the schools
     School[] schoolArray = new School[numberOfSchools];
     int i = 0;
     while (cursor.hasNext() && i < numberOfSchools)
       {
+        //advance the cursor
         cursor.next();
+        //get the name, abrev, and yes dates
         String name = cursor.next();
         String abrev = cursor.next();
         String yes = (cursor.next());
@@ -77,14 +87,14 @@ public class Utils
         if (yes != "")
           {
             yesDates = stringToDate(yes.split(", "));
-          }//if
+          }//if yesDates is null
         String no = (cursor.next());
         ArrayList<LocalDate> noDates = null;
         if (no != "")
           {
             noDates = stringToDate(no.split(", "));
-          }//if
-
+          }//if noDates is null
+        //make an ArrayList to hold plays
         ArrayList<String> plays = new ArrayList<String>(16);
         String[] twice = cursor.next().split(" ");
         String[] once = cursor.next().split(" ");
@@ -100,7 +110,7 @@ public class Utils
 
         schoolArray[i] = new School(name, abrev, yesDates, noDates, plays);
         i++;
-      }//while
+      }//while there is another element and we haven't progressed through all schools
 
     SchoolSet answer = new SchoolSet(schoolArray, season);
 
@@ -111,16 +121,19 @@ public class Utils
    * Turn input into an array of distances
    * @param input, a linked list
    * @return an array of Distances
+   * @pre input must be a file in the proper distance format
    */
   public static Distance[] distanceReader(List<String> input)
   {
     ListIterator<String> cursor = input.listIterator();
     int size = input.size();
+    //if the file is empty return null
     if (size == 0)
       return null;
     Distance[] vals = new Distance[size];
     for (int i = 0; i < size; i++)
       {
+        //split the inpup into tmp and fill vals with Distances
         String[] tmp = cursor.next().split(" ");
         vals[i] = new Distance(tmp[0], tmp[1], Integer.valueOf(tmp[2]));
       }//for loop
@@ -137,37 +150,39 @@ public class Utils
   public static ArrayList<LocalDate> stringToDate(String[] input)
   {
     int count = input.length;
-
+    //declare a new ArrayList to hold the dates
     ArrayList<LocalDate> vals = new ArrayList<LocalDate>(count);
     for (int i = 0; i < count; i++)
       {
         if (input[i] != " ")
           {
+            //add to vals
             CharSequence tmp = input[i].subSequence(0, input[i].length());
             vals.add(i, LocalDate.parse(tmp));
-          }
+          }//if input is not null
       }//for
 
     return vals;
-  }//stringToDate(String)
+  }//stringToDate(String[])
 
   /**
    * Print out our entire schedule of games and dates
-   * @param pen
-   * @param games
+   * @param pen, a PrintWriter
+   * @param schools, a SchoolSet
    */
   public static void schedPrint(PrintWriter pen, SchoolSet schools)
   {
-   Game[] games = schools.sortByGameDate() ;
+    Game[] games = schools.sortByGameDate();
     pen.println("Schedule of Games");
-    
+    //loop through games
     for (int i = 0; i < games.length; i++)
       {
+        //print desired info in desired format 
         pen.print(" " + (i + 1) + ".");
         printDate(games[i].date, pen);
         pen.println("  " + " " + games[i].home.abrev + " vs. "
                     + games[i].away.abrev + " at " + games[i].away.name);
-      }//for loop
+      }//for 
   }//schedPrint(PrintWriter, SchoolSet)
 
   /**
@@ -182,7 +197,7 @@ public class Utils
     int year = date.getYear();
     String weekday = titleCase(date.getDayOfWeek().toString());
     pen.println(weekday + " " + month + ", " + day + "th " + year);
-  }//void (LocalDate, PrintWriter)
+  }//printDate(LocalDate, PrintWriter)
 
   /**
    * Turn a string into TitleCase
@@ -195,6 +210,6 @@ public class Utils
     Character first = input.charAt(0);
     first = Character.toUpperCase(first);
     return input.replace(input.charAt(0), first);
-  }// camelCase
+  }// titleCase(String)
 
 }//class Utils
